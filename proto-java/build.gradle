@@ -20,7 +20,7 @@ sourceSets {
     main {
         proto {
             // In addition to the default 'src/main/proto'
-            srcDir '../proto-go'
+            srcDir '../proto-models'
         }
     }
     test {
