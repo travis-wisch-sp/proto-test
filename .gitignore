@@ -23,3 +23,28 @@ go.work.sum
 
 # env file
 .env
+
+proto-java/.gradle
+proto-java/build/**
+proto-java/caches/**
+proto-java/!gradle/wrapper/gradle-wrapper.jar
+proto-java/!**/src/main/**/build/
+proto-java/!**/src/test/**/build/
+
+### IntelliJ IDEA ###
+proto-java/.idea/modules.xml
+proto-java/.idea/jarRepositories.xml
+proto-java/.idea/compiler.xml
+proto-java/.idea/libraries/
+proto-java/*.iws
+proto-java/*.iml
+proto-java/*.ipr
+proto-java/out/
+proto-java/!**/src/main/**/out/
+proto-java/!**/src/test/**/out/
+
+### VS Code ###
+proto-java/.vscode/
+
+### Mac OS ###
+proto-java/.DS_Store

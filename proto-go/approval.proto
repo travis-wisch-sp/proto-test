@@ -5,12 +5,12 @@ package example.dummy;
 option go_package = "github.com/travis-wisch-sp/proto-test/proto-go";
 
 enum Status {
-  STATUS_UNSPECIFIED = 0;
-  STATUS_PENDING = 1;
-  STATUS_APPROVED = 2;
-  STATUS_REJECTED = 3;
-  STATUS_CANCELLED = 4;
-  STATUS_EXPIRED = 5;
+  UNSPECIFIED = 0;
+  PENDING = 1;
+  APPROVED = 2;
+  REJECTED = 3;
+  CANCELLED = 4;
+  EXPIRED = 5;
 }
 
 message Approval {

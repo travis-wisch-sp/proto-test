@@ -13,3 +13,6 @@ bump: generate
 clean:
 	rm ${PROTO_DIR}/*.pb.go
 	rm main
+
+gen-java-proto:
+	cd proto-java && ./gradlew generateProto
