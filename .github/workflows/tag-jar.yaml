@@ -23,7 +23,7 @@ jobs:
 
       # Step 3: Build your JAR (this example assumes you're using Gradle)
       - name: Build JAR
-        run: ./gradlew build  # If you're using Gradle. Change to `mvn clean package` for Maven.
+        run: cd proto-java && ./gradlew build
 
       # Step 4: Create Git tag based on the current timestamp or use any other naming convention
       - name: Create Git tag
