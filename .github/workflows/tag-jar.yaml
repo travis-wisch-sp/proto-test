@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'  # Adjust version if needed
-          distribution: ''
+          distribution: 'temurin'
 
       # Step 3: Build your JAR (this example assumes you're using Gradle)
       - name: Build JAR
