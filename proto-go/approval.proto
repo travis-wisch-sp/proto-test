@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package example.dummy;
+
+option go_package = "github.com/travis-wisch-sp/proto-test/proto-go";
+
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_PENDING = 1;
+  STATUS_APPROVED = 2;
+  STATUS_REJECTED = 3;
+  STATUS_CANCELLED = 4;
+  STATUS_EXPIRED = 5;
+}
+
+message Approval {
+  string id = 1;
+  string tenant_id = 2;
+  repeated Identity approvers = 3;
+  Status status = 4;
+}
+
+message Identity {
+  string id = 1;
+  string type = 2;
+  uint64 serial_order = 3;
+}
