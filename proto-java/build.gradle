@@ -21,12 +21,26 @@ sourceSets {
         proto {
             // In addition to the default 'src/main/proto'
             srcDir '../proto-models'
+//            buildDir("$projectDir/src/main/java/protobuf")
         }
     }
     test {
         proto {
             // In addition to the default 'src/test/proto'
             srcDir 'src/test/protocolbuffers'
+        }
+    }
+}
+
+protobuf {
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    // Set the output directory for generated Java files
+                    outputSubDir = "$projectDir/src/main/java/protobuf"
+                }
+            }
         }
     }
 }
@@ -38,6 +52,12 @@ dependencies {
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+jar {
+    archiveBaseName = 'approval-library'  // Name of the JAR file (without extension)
+    archiveVersion = '1.0.0'  // Version of the JAR
+    destinationDirectory = file("$buildDir/libs")  // Output directory for the JAR
 }
 
 test {

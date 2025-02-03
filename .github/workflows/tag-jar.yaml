@@ -1,0 +1,33 @@
+name: Tag JAR on Push to Main
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the 'main' branch
+
+jobs:
+  build-and-tag:
+    runs-on: ubuntu-latest  # You can change this to other OS types if needed
+
+    steps:
+      # Step 1: Checkout the code from the repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Set up JDK (if you're using Gradle/Maven for building)
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'  # Adjust version if needed
+          distribution: ''
+
+      # Step 3: Build your JAR (this example assumes you're using Gradle)
+      - name: Build JAR
+        run: ./gradlew build  # If you're using Gradle. Change to `mvn clean package` for Maven.
+
+      # Step 4: Create Git tag based on the current timestamp or use any other naming convention
+      - name: Create Git tag
+        run: |
+          TAG_NAME="v$(date +'%Y%m%d%H%M%S')" 
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
