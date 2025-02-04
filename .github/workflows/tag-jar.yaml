@@ -29,10 +29,9 @@ jobs:
       - name: Create Git tag
         run: |
           TAG_NAME="v$(date +'%Y%m%d%H%M%S')" 
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           git tag $TAG_NAME
           git push origin $TAG_NAME
-          echo "$TAG_NAME" >> $GITHUB_ENV
-          echo $env.TAG_NAME
 
       # Step 5: Create a GitHub Release
       - name: Create GitHub Release
