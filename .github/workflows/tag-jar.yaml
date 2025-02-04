@@ -32,6 +32,8 @@ jobs:
           git tag $TAG_NAME
           git push origin $TAG_NAME
           echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}"
+          echo $env.SOURCE_TAG
 
       # Step 5: Create a GitHub Release
       - name: Create GitHub Release
