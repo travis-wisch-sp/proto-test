@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	proto_go "github.com/travis-wisch-sp/proto-test/proto-go"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func main() {
@@ -18,10 +20,11 @@ func main() {
 	})
 
 	testApproval := proto_go.Approval{
-		Id:        uuid.NewString(),
-		TenantId:  uuid.NewString(),
-		Approvers: testIdentities,
-		Status:    proto_go.Status_PENDING,
+		Id:          uuid.NewString(),
+		TenantId:    uuid.NewString(),
+		Approvers:   testIdentities,
+		Status:      proto_go.Status_PENDING,
+		CreatedDate: timestamppb.New(time.Now()),
 	}
 
 	fmt.Println("Test approval struct:")
