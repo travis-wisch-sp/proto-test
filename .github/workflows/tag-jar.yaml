@@ -32,7 +32,8 @@ jobs:
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           git tag $TAG_NAME
           git push origin $TAG_NAME
-          ls
+          ls proto-java/build
+          ls proto-java/build/libs
 
       # Step 5: Create a GitHub Release
       - name: Create GitHub Release
