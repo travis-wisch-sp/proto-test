@@ -33,6 +33,14 @@ sourceSets {
 }
 
 protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.29.3"
+    }
+    plugins {
+        lite {
+            artifact = "com.google.protobuf:protoc-gen-javalite:4.29.3"
+        }
+    }
     generateProtoTasks {
         all().each { task ->
             task.builtins {
