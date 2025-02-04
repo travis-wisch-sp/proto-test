@@ -37,9 +37,9 @@ jobs:
         id: release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ steps.tag.outputs.TAG_NAME }}
-          release_name: "Release ${{ steps.tag.outputs.TAG_NAME }}"
-          body: "Automatically generated release for ${{ steps.tag.outputs.TAG_NAME }}."
+          tag_name: ${{ TAG_NAME }}
+          release_name: "Release ${{ TAG_NAME }}"
+          body: "Automatically generated release for ${{ TAG_NAME }}."
           draft: false
           prerelease: false
         env:
@@ -50,8 +50,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.release.outputs.upload_url }}  # URL from create-release step
-          asset_path: build/libs/*.jar  # Path to your JAR file
-          asset_name: my-library-${{ steps.tag.outputs.TAG_NAME }}.jar  # Name of the file in the release
+          asset_path: proto-java/build/libs/*.jar  # Path to your JAR file
+          asset_name: approval-library-${{ TAG_NAME }}.jar  # Name of the file in the release
           asset_content_type: application/java-archive  # MIME type for JAR files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token for authentication
