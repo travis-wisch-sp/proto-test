@@ -32,6 +32,7 @@ jobs:
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           git tag $TAG_NAME
           git push origin $TAG_NAME
+          ls
 
       # Step 5: Create a GitHub Release
       - name: Create GitHub Release
