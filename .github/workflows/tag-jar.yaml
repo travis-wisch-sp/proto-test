@@ -31,19 +31,20 @@ jobs:
           TAG_NAME="v$(date +'%Y%m%d%H%M%S')" 
           git tag $TAG_NAME
           git push origin $TAG_NAME
+          echo "SOURCE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       # Step 5: Create a GitHub Release
       - name: Create GitHub Release
         id: release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ TAG_NAME }}
-          release_name: "Release ${{ TAG_NAME }}"
-          body: "Automatically generated release for ${{ TAG_NAME }}."
+          tag_name: ${{ env.SOURCE_TAG }}
+          release_name: "Release ${{ env.SOURCE_TAG }}
+          body: "Automatically generated release for ${{ env.SOURCE_TAG }}."
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token for authentication
+          GITHUB_TOKEN: ${{ env.SOURCE_TAG }}  # Token for authentication
 
       # Step 6: Upload the JAR as a release asset
       - name: Upload JAR as a Release Asset
@@ -51,7 +52,7 @@ jobs:
         with:
           upload_url: ${{ steps.release.outputs.upload_url }}  # URL from create-release step
           asset_path: proto-java/build/libs/*.jar  # Path to your JAR file
-          asset_name: approval-library-${{ TAG_NAME }}.jar  # Name of the file in the release
+          asset_name: approval-library-${{ env.SOURCE_TAG }}.jar  # Name of the file in the release
           asset_content_type: application/java-archive  # MIME type for JAR files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Token for authentication
