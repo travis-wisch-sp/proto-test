@@ -39,7 +39,7 @@ jobs:
         uses: actions/create-release@v1
         with:
           tag_name: ${{env.SOURCE_TAG}}
-          release_name: "Release ${{ env.SOURCE_TAG }}
+          release_name: "Release ${{ env.SOURCE_TAG }}"
           body: "Automatically generated release for ${{ env.SOURCE_TAG }}."
           draft: false
           prerelease: false
