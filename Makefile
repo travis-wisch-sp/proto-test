@@ -17,4 +17,4 @@ gen-go-proto:
 	protoc -I${PROTO_DIR} --go_opt=module=${PACKAGE}/proto-go --go_out=./proto-go ${PROTO_DIR}/*.proto
 
 gen-java-proto:
-	cd proto-java && ./gradlew generateProto
+	cd proto-java && ./gradlew generateProto && ./gradlew build
