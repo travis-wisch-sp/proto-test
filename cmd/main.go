@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	proto_go "github.com/travis-wisch-sp/proto-test/proto-go"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -19,14 +20,28 @@ func main() {
 		SerialOrder: 1,
 	})
 
-	testApproval := proto_go.Approval{
+	testApproval := &proto_go.Approval{
 		Id:          uuid.NewString(),
 		TenantId:    uuid.NewString(),
 		Approvers:   testIdentities,
 		Status:      proto_go.Status_PENDING,
 		CreatedDate: timestamppb.New(time.Now()),
 	}
-
 	fmt.Println("Test approval struct:")
 	fmt.Println(testApproval)
+
+	encodedApproval, err := proto.Marshal(testApproval)
+	if err != nil {
+		return
+	}
+	fmt.Println("Encoded approval struct:")
+	fmt.Println(encodedApproval)
+
+	decodedApproval := &proto_go.Approval{}
+	if err := proto.Unmarshal(encodedApproval, decodedApproval); err != nil {
+		return
+	}
+
+	fmt.Println("Decoded approval struct:")
+	fmt.Println(decodedApproval.String())
 }

@@ -1,16 +1,19 @@
 package approval;
 
 import approval.request.ApprovalOuterClass;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.ProtobufToStringOutput;
 import com.google.protobuf.Timestamp;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class ApprovalMain {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidProtocolBufferException {
         List<approval.request.ApprovalOuterClass.Identity> testIdentities = new ArrayList<>();
         testIdentities.add(ApprovalOuterClass.Identity.newBuilder()
                 .setType("IDENTITY")
@@ -36,6 +39,12 @@ public class ApprovalMain {
                         .build())
                 .build();
 
-        System.out.println(testApproval);
+        System.out.println("Test approval object: " + testApproval);
+
+        byte[] encodedApproval = testApproval.toByteArray();
+        System.out.println("Encoded approval object: " + Arrays.toString(encodedApproval));
+
+        ApprovalOuterClass.Approval decodedApproval = ApprovalOuterClass.Approval.parseFrom(encodedApproval);
+        System.out.println("\nDecoded approval object: " + decodedApproval);
     }
 }
