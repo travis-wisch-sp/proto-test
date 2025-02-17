@@ -2,7 +2,6 @@ package approval;
 
 import approval.request.ApprovalOuterClass;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.ProtobufToStringOutput;
 import com.google.protobuf.Timestamp;
 
 import java.time.OffsetDateTime;
