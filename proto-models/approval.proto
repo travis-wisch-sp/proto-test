@@ -2,30 +2,182 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
+
 package approval.request;
 
 option go_package = "github.com/travis-wisch-sp/proto-test/proto-go";
 
+// are these enums correct?
 enum Status {
-  UNSPECIFIED = 0;
-  PENDING = 1;
-  APPROVED = 2;
-  REJECTED = 3;
-  CANCELLED = 4;
-  EXPIRED = 5;
+  PENDING = 0;
+  APPROVED = 1;
+  REJECTED = 2;
+  EXPIRED = 3;
+}
+
+enum Priority {
+  LOW = 0;
+  MEDIUM = 1;
+  HIGH = 2;
+}
+
+enum Medium {
+  EMAIL = 0;
+  SLACK = 1;
+  TEAMS = 2;
+}
+
+enum ApprovalCriteriaType {
+  SERIAL = 0;
+  PARALLEL = 1;
+}
+
+enum ApprovalCriteriaCalculationType {
+  COUNT = 0;
+  PERCENT = 1;
+}
+
+enum AutoApproveType {
+  AUTO_DIRECT = 0;
+  AUTO_INDIRECT = 1;
+  AUTO_OFF = 2;
+}
+
+enum ApprovalConfigScope {
+  APPROVAL_REQUEST = 0;
+  DOMAIN_OBJECT = 1;
+  APPROVAL_TYPE = 2;
+  TENANT = 3;
+}
+
+enum RequireCommentType {
+  ALL = 0;
+  APPROVAL = 1;
+  REJECTION = 2;
+  OFF = 3;
 }
 
 message Approval {
   string id = 1;
-  string tenant_id = 2;
+  string tenantId = 2;
   repeated Identity approvers = 3;
-  Status status = 4;
-  google.protobuf.Timestamp created_date = 5;
-  string type = 6;
+  google.protobuf.Timestamp createdDate = 4;
+  BatchRequest batchRequest = 5;
+  google.protobuf.Timestamp dueDate = 6;
+  string type = 7;
+  repeated LocaleField name = 8;
+  repeated LocaleField description = 9;
+  Priority priority = 10;
+  repeated Medium medium = 11;
+  Identity requester = 12;
+  Identity requestee = 13;
+  repeated Comment comments = 14;
+  ApprovalCriteria approvalCriteria = 15;
+  repeated Identity ApprovedBy = 16;
+  repeated Identity RejectedBy = 17;
+  google.protobuf.Timestamp completedDate = 18;
+  Status status = 19;
+  RequestedTarget requestedTarget = 20;
+  repeated Reference referenceData = 21;
+  // do we need to support any for the value on the map?
+  map<string, string> additionalAttributes = 22;
+  AutoApproveType autoApprove = 23;
+  ApprovalConfig approvalConfig = 24;
+  int64 serialStep = 25;
+  int64 escalationStep = 26;
+}
+
+message BatchRequest {
+  string batchId = 1;
+  int64 batchSize = 2;
 }
 
 message Identity {
   string id = 1;
   string type = 2;
   uint64 serial_order = 3;
+}
+
+message LocaleField {
+  string value = 1;
+  string locale = 2;
+}
+
+message Comment {
+  string commentId = 1;
+  Identity author = 2;
+  string comment = 3;
+  google.protobuf.Timestamp createdDate = 4;
+}
+
+message ApprovalCriteria {
+  ApprovalCriteriaType type = 1;
+  ApprovalCriteriaCalculation rejection = 2;
+  ApprovalCriteriaCalculation approval = 3;
+}
+
+message ApprovalCriteriaCalculation {
+  ApprovalCriteriaCalculationType calculationType = 1;
+  int64 calculativalueonType = 2;
+}
+
+// what enums for types?
+message RequestedTarget {
+  string id = 1;
+  string name = 2;
+  string targetType = 3;
+  string requestType = 4;
+}
+
+// what enums for type?
+message Reference {
+  string id = 1;
+  string type = 2;
+  string name = 3;
+}
+
+message ApprovalConfig {
+  string tenantId = 1;
+  string id = 2;
+  ApprovalConfigScope scope = 3;
+  ReminderConfig reminderConfig = 4;
+  EscalationConfig escalationConfig = 5;
+  TimeoutConfig timeoutConfig = 6;
+  CronTimezone cronTimezone = 7;
+  repeated ChainTier serialChain = 8;
+  RequireCommentType requireComment = 9;
+  Identity fallbackAppover = 10;
+}
+
+message ReminderConfig {
+  bool enabled = 1;
+  int64 daysUntilFirstReminder = 2;
+  string reminderCronSchedule = 3;
+  int64 MaxReminders = 4;
+}
+
+message EscalationConfig {
+  bool enabled = 1;
+  int64 daysUntilFirstEscalation = 2;
+  string escalationCronSchedule = 3;
+  repeated ChainTier escalationChain = 4;
+}
+
+message TimeoutConfig {
+  bool enabled = 1;
+  int64 daysUntilTimeout = 2;
+  // timeoutResult - does it need to be an enum?
+  string timeoutResult = 3;
+}
+
+message CronTimezone {
+  string location = 1;
+  string offset = 2;
+}
+
+message ChainTier {
+  string chainId = 1;
+  int64 tier = 2;
+  string identityId = 3;
+  string identityType = 4;
 }
