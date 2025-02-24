@@ -2,17 +2,17 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
-
+// look into generic types in protobuf for "any"
 package approval.request;
 
 option go_package = "github.com/travis-wisch-sp/proto-test/proto-go";
 
-// are these enums correct?
 enum Status {
   PENDING = 0;
   APPROVED = 1;
   REJECTED = 2;
   EXPIRED = 3;
+  CANCELLED = 4;
 }
 
 enum Priority {
@@ -57,6 +57,16 @@ enum RequireCommentType {
   OFF = 3;
 }
 
+enum ChainIdentityType {
+  IDENTITY = 0;
+  MANAGER_OF = 1;
+  GOVERNANCE_GROUP = 2;
+  SOURCE_OWNER = 3;
+  ROLE_OWNER = 4;
+  ACCESS_PROFILE_OWNER = 5;
+  ENTITLEMENT_OWNER = 6;
+}
+
 message Approval {
   string id = 1;
   string tenantId = 2;
@@ -79,17 +89,16 @@ message Approval {
   Status status = 19;
   RequestedTarget requestedTarget = 20;
   repeated Reference referenceData = 21;
-  // do we need to support any for the value on the map?
   map<string, string> additionalAttributes = 22;
   AutoApproveType autoApprove = 23;
   ApprovalConfig approvalConfig = 24;
-  int64 serialStep = 25;
-  int64 escalationStep = 26;
+  uint64 serialStep = 25;
+  uint64 escalationStep = 26;
 }
 
 message BatchRequest {
   string batchId = 1;
-  int64 batchSize = 2;
+  uint64 batchSize = 2;
 }
 
 message Identity {
@@ -118,7 +127,7 @@ message ApprovalCriteria {
 
 message ApprovalCriteriaCalculation {
   ApprovalCriteriaCalculationType calculationType = 1;
-  int64 calculativalueonType = 2;
+  uint64 calculativalueonType = 2;
 }
 
 // what enums for types?
@@ -151,23 +160,22 @@ message ApprovalConfig {
 
 message ReminderConfig {
   bool enabled = 1;
-  int64 daysUntilFirstReminder = 2;
+  uint64 daysUntilFirstReminder = 2;
   string reminderCronSchedule = 3;
-  int64 MaxReminders = 4;
+  uint64 MaxReminders = 4;
 }
 
 message EscalationConfig {
   bool enabled = 1;
-  int64 daysUntilFirstEscalation = 2;
+  uint64 daysUntilFirstEscalation = 2;
   string escalationCronSchedule = 3;
   repeated ChainTier escalationChain = 4;
 }
 
 message TimeoutConfig {
   bool enabled = 1;
-  int64 daysUntilTimeout = 2;
-  // timeoutResult - does it need to be an enum?
-  string timeoutResult = 3;
+  uint64 daysUntilTimeout = 2;
+  Status timeoutResult = 3;
 }
 
 message CronTimezone {
@@ -177,7 +185,7 @@ message CronTimezone {
 
 message ChainTier {
   string chainId = 1;
-  int64 tier = 2;
+  uint64 tier = 2;
   string identityId = 3;
-  string identityType = 4;
+  ChainIdentityType identityType = 4;
 }

@@ -4,6 +4,8 @@
 // 	protoc        v5.29.3
 // source: approval.proto
 
+// look into generic types in protobuf for "any"
+
 package proto_go
 
 import (
@@ -22,14 +24,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// are these enums correct?
 type Status int32
 
 const (
-	Status_PENDING  Status = 0
-	Status_APPROVED Status = 1
-	Status_REJECTED Status = 2
-	Status_EXPIRED  Status = 3
+	Status_PENDING   Status = 0
+	Status_APPROVED  Status = 1
+	Status_REJECTED  Status = 2
+	Status_EXPIRED   Status = 3
+	Status_CANCELLED Status = 4
 )
 
 // Enum value maps for Status.
@@ -39,12 +41,14 @@ var (
 		1: "APPROVED",
 		2: "REJECTED",
 		3: "EXPIRED",
+		4: "CANCELLED",
 	}
 	Status_value = map[string]int32{
-		"PENDING":  0,
-		"APPROVED": 1,
-		"REJECTED": 2,
-		"EXPIRED":  3,
+		"PENDING":   0,
+		"APPROVED":  1,
+		"REJECTED":  2,
+		"EXPIRED":   3,
+		"CANCELLED": 4,
 	}
 )
 
@@ -418,35 +422,95 @@ func (RequireCommentType) EnumDescriptor() ([]byte, []int) {
 	return file_approval_proto_rawDescGZIP(), []int{7}
 }
 
+type ChainIdentityType int32
+
+const (
+	ChainIdentityType_IDENTITY             ChainIdentityType = 0
+	ChainIdentityType_MANAGER_OF           ChainIdentityType = 1
+	ChainIdentityType_GOVERNANCE_GROUP     ChainIdentityType = 2
+	ChainIdentityType_SOURCE_OWNER         ChainIdentityType = 3
+	ChainIdentityType_ROLE_OWNER           ChainIdentityType = 4
+	ChainIdentityType_ACCESS_PROFILE_OWNER ChainIdentityType = 5
+	ChainIdentityType_ENTITLEMENT_OWNER    ChainIdentityType = 6
+)
+
+// Enum value maps for ChainIdentityType.
+var (
+	ChainIdentityType_name = map[int32]string{
+		0: "IDENTITY",
+		1: "MANAGER_OF",
+		2: "GOVERNANCE_GROUP",
+		3: "SOURCE_OWNER",
+		4: "ROLE_OWNER",
+		5: "ACCESS_PROFILE_OWNER",
+		6: "ENTITLEMENT_OWNER",
+	}
+	ChainIdentityType_value = map[string]int32{
+		"IDENTITY":             0,
+		"MANAGER_OF":           1,
+		"GOVERNANCE_GROUP":     2,
+		"SOURCE_OWNER":         3,
+		"ROLE_OWNER":           4,
+		"ACCESS_PROFILE_OWNER": 5,
+		"ENTITLEMENT_OWNER":    6,
+	}
+)
+
+func (x ChainIdentityType) Enum() *ChainIdentityType {
+	p := new(ChainIdentityType)
+	*p = x
+	return p
+}
+
+func (x ChainIdentityType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ChainIdentityType) Descriptor() protoreflect.EnumDescriptor {
+	return file_approval_proto_enumTypes[8].Descriptor()
+}
+
+func (ChainIdentityType) Type() protoreflect.EnumType {
+	return &file_approval_proto_enumTypes[8]
+}
+
+func (x ChainIdentityType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ChainIdentityType.Descriptor instead.
+func (ChainIdentityType) EnumDescriptor() ([]byte, []int) {
+	return file_approval_proto_rawDescGZIP(), []int{8}
+}
+
 type Approval struct {
-	state            protoimpl.MessageState `protogen:"open.v1"`
-	Id               string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	TenantId         string                 `protobuf:"bytes,2,opt,name=tenantId,proto3" json:"tenantId,omitempty"`
-	Approvers        []*Identity            `protobuf:"bytes,3,rep,name=approvers,proto3" json:"approvers,omitempty"`
-	CreatedDate      *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=createdDate,proto3" json:"createdDate,omitempty"`
-	BatchRequest     *BatchRequest          `protobuf:"bytes,5,opt,name=batchRequest,proto3" json:"batchRequest,omitempty"`
-	DueDate          *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=dueDate,proto3" json:"dueDate,omitempty"`
-	Type             string                 `protobuf:"bytes,7,opt,name=type,proto3" json:"type,omitempty"`
-	Name             []*LocaleField         `protobuf:"bytes,8,rep,name=name,proto3" json:"name,omitempty"`
-	Description      []*LocaleField         `protobuf:"bytes,9,rep,name=description,proto3" json:"description,omitempty"`
-	Priority         Priority               `protobuf:"varint,10,opt,name=priority,proto3,enum=approval.request.Priority" json:"priority,omitempty"`
-	Medium           []Medium               `protobuf:"varint,11,rep,packed,name=medium,proto3,enum=approval.request.Medium" json:"medium,omitempty"`
-	Requester        *Identity              `protobuf:"bytes,12,opt,name=requester,proto3" json:"requester,omitempty"`
-	Requestee        *Identity              `protobuf:"bytes,13,opt,name=requestee,proto3" json:"requestee,omitempty"`
-	Comments         []*Comment             `protobuf:"bytes,14,rep,name=comments,proto3" json:"comments,omitempty"`
-	ApprovalCriteria *ApprovalCriteria      `protobuf:"bytes,15,opt,name=approvalCriteria,proto3" json:"approvalCriteria,omitempty"`
-	ApprovedBy       []*Identity            `protobuf:"bytes,16,rep,name=ApprovedBy,proto3" json:"ApprovedBy,omitempty"`
-	RejectedBy       []*Identity            `protobuf:"bytes,17,rep,name=RejectedBy,proto3" json:"RejectedBy,omitempty"`
-	CompletedDate    *timestamppb.Timestamp `protobuf:"bytes,18,opt,name=completedDate,proto3" json:"completedDate,omitempty"`
-	Status           Status                 `protobuf:"varint,19,opt,name=status,proto3,enum=approval.request.Status" json:"status,omitempty"`
-	RequestedTarget  *RequestedTarget       `protobuf:"bytes,20,opt,name=requestedTarget,proto3" json:"requestedTarget,omitempty"`
-	ReferenceData    []*Reference           `protobuf:"bytes,21,rep,name=referenceData,proto3" json:"referenceData,omitempty"`
-	// do we need to support any for the value on the map?
-	AdditionalAttributes map[string]string `protobuf:"bytes,22,rep,name=additionalAttributes,proto3" json:"additionalAttributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
-	AutoApprove          AutoApproveType   `protobuf:"varint,23,opt,name=autoApprove,proto3,enum=approval.request.AutoApproveType" json:"autoApprove,omitempty"`
-	ApprovalConfig       *ApprovalConfig   `protobuf:"bytes,24,opt,name=approvalConfig,proto3" json:"approvalConfig,omitempty"`
-	SerialStep           int64             `protobuf:"varint,25,opt,name=serialStep,proto3" json:"serialStep,omitempty"`
-	EscalationStep       int64             `protobuf:"varint,26,opt,name=escalationStep,proto3" json:"escalationStep,omitempty"`
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	Id                   string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	TenantId             string                 `protobuf:"bytes,2,opt,name=tenantId,proto3" json:"tenantId,omitempty"`
+	Approvers            []*Identity            `protobuf:"bytes,3,rep,name=approvers,proto3" json:"approvers,omitempty"`
+	CreatedDate          *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=createdDate,proto3" json:"createdDate,omitempty"`
+	BatchRequest         *BatchRequest          `protobuf:"bytes,5,opt,name=batchRequest,proto3" json:"batchRequest,omitempty"`
+	DueDate              *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=dueDate,proto3" json:"dueDate,omitempty"`
+	Type                 string                 `protobuf:"bytes,7,opt,name=type,proto3" json:"type,omitempty"`
+	Name                 []*LocaleField         `protobuf:"bytes,8,rep,name=name,proto3" json:"name,omitempty"`
+	Description          []*LocaleField         `protobuf:"bytes,9,rep,name=description,proto3" json:"description,omitempty"`
+	Priority             Priority               `protobuf:"varint,10,opt,name=priority,proto3,enum=approval.request.Priority" json:"priority,omitempty"`
+	Medium               []Medium               `protobuf:"varint,11,rep,packed,name=medium,proto3,enum=approval.request.Medium" json:"medium,omitempty"`
+	Requester            *Identity              `protobuf:"bytes,12,opt,name=requester,proto3" json:"requester,omitempty"`
+	Requestee            *Identity              `protobuf:"bytes,13,opt,name=requestee,proto3" json:"requestee,omitempty"`
+	Comments             []*Comment             `protobuf:"bytes,14,rep,name=comments,proto3" json:"comments,omitempty"`
+	ApprovalCriteria     *ApprovalCriteria      `protobuf:"bytes,15,opt,name=approvalCriteria,proto3" json:"approvalCriteria,omitempty"`
+	ApprovedBy           []*Identity            `protobuf:"bytes,16,rep,name=ApprovedBy,proto3" json:"ApprovedBy,omitempty"`
+	RejectedBy           []*Identity            `protobuf:"bytes,17,rep,name=RejectedBy,proto3" json:"RejectedBy,omitempty"`
+	CompletedDate        *timestamppb.Timestamp `protobuf:"bytes,18,opt,name=completedDate,proto3" json:"completedDate,omitempty"`
+	Status               Status                 `protobuf:"varint,19,opt,name=status,proto3,enum=approval.request.Status" json:"status,omitempty"`
+	RequestedTarget      *RequestedTarget       `protobuf:"bytes,20,opt,name=requestedTarget,proto3" json:"requestedTarget,omitempty"`
+	ReferenceData        []*Reference           `protobuf:"bytes,21,rep,name=referenceData,proto3" json:"referenceData,omitempty"`
+	AdditionalAttributes map[string]string      `protobuf:"bytes,22,rep,name=additionalAttributes,proto3" json:"additionalAttributes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	AutoApprove          AutoApproveType        `protobuf:"varint,23,opt,name=autoApprove,proto3,enum=approval.request.AutoApproveType" json:"autoApprove,omitempty"`
+	ApprovalConfig       *ApprovalConfig        `protobuf:"bytes,24,opt,name=approvalConfig,proto3" json:"approvalConfig,omitempty"`
+	SerialStep           uint64                 `protobuf:"varint,25,opt,name=serialStep,proto3" json:"serialStep,omitempty"`
+	EscalationStep       uint64                 `protobuf:"varint,26,opt,name=escalationStep,proto3" json:"escalationStep,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -649,14 +713,14 @@ func (x *Approval) GetApprovalConfig() *ApprovalConfig {
 	return nil
 }
 
-func (x *Approval) GetSerialStep() int64 {
+func (x *Approval) GetSerialStep() uint64 {
 	if x != nil {
 		return x.SerialStep
 	}
 	return 0
 }
 
-func (x *Approval) GetEscalationStep() int64 {
+func (x *Approval) GetEscalationStep() uint64 {
 	if x != nil {
 		return x.EscalationStep
 	}
@@ -666,7 +730,7 @@ func (x *Approval) GetEscalationStep() int64 {
 type BatchRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	BatchId       string                 `protobuf:"bytes,1,opt,name=batchId,proto3" json:"batchId,omitempty"`
-	BatchSize     int64                  `protobuf:"varint,2,opt,name=batchSize,proto3" json:"batchSize,omitempty"`
+	BatchSize     uint64                 `protobuf:"varint,2,opt,name=batchSize,proto3" json:"batchSize,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -708,7 +772,7 @@ func (x *BatchRequest) GetBatchId() string {
 	return ""
 }
 
-func (x *BatchRequest) GetBatchSize() int64 {
+func (x *BatchRequest) GetBatchSize() uint64 {
 	if x != nil {
 		return x.BatchSize
 	}
@@ -958,7 +1022,7 @@ func (x *ApprovalCriteria) GetApproval() *ApprovalCriteriaCalculation {
 type ApprovalCriteriaCalculation struct {
 	state                protoimpl.MessageState          `protogen:"open.v1"`
 	CalculationType      ApprovalCriteriaCalculationType `protobuf:"varint,1,opt,name=calculationType,proto3,enum=approval.request.ApprovalCriteriaCalculationType" json:"calculationType,omitempty"`
-	CalculativalueonType int64                           `protobuf:"varint,2,opt,name=calculativalueonType,proto3" json:"calculativalueonType,omitempty"`
+	CalculativalueonType uint64                          `protobuf:"varint,2,opt,name=calculativalueonType,proto3" json:"calculativalueonType,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -1000,7 +1064,7 @@ func (x *ApprovalCriteriaCalculation) GetCalculationType() ApprovalCriteriaCalcu
 	return ApprovalCriteriaCalculationType_COUNT
 }
 
-func (x *ApprovalCriteriaCalculation) GetCalculativalueonType() int64 {
+func (x *ApprovalCriteriaCalculation) GetCalculativalueonType() uint64 {
 	if x != nil {
 		return x.CalculativalueonType
 	}
@@ -1256,9 +1320,9 @@ func (x *ApprovalConfig) GetFallbackAppover() *Identity {
 type ReminderConfig struct {
 	state                  protoimpl.MessageState `protogen:"open.v1"`
 	Enabled                bool                   `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	DaysUntilFirstReminder int64                  `protobuf:"varint,2,opt,name=daysUntilFirstReminder,proto3" json:"daysUntilFirstReminder,omitempty"`
+	DaysUntilFirstReminder uint64                 `protobuf:"varint,2,opt,name=daysUntilFirstReminder,proto3" json:"daysUntilFirstReminder,omitempty"`
 	ReminderCronSchedule   string                 `protobuf:"bytes,3,opt,name=reminderCronSchedule,proto3" json:"reminderCronSchedule,omitempty"`
-	MaxReminders           int64                  `protobuf:"varint,4,opt,name=MaxReminders,proto3" json:"MaxReminders,omitempty"`
+	MaxReminders           uint64                 `protobuf:"varint,4,opt,name=MaxReminders,proto3" json:"MaxReminders,omitempty"`
 	unknownFields          protoimpl.UnknownFields
 	sizeCache              protoimpl.SizeCache
 }
@@ -1300,7 +1364,7 @@ func (x *ReminderConfig) GetEnabled() bool {
 	return false
 }
 
-func (x *ReminderConfig) GetDaysUntilFirstReminder() int64 {
+func (x *ReminderConfig) GetDaysUntilFirstReminder() uint64 {
 	if x != nil {
 		return x.DaysUntilFirstReminder
 	}
@@ -1314,7 +1378,7 @@ func (x *ReminderConfig) GetReminderCronSchedule() string {
 	return ""
 }
 
-func (x *ReminderConfig) GetMaxReminders() int64 {
+func (x *ReminderConfig) GetMaxReminders() uint64 {
 	if x != nil {
 		return x.MaxReminders
 	}
@@ -1324,7 +1388,7 @@ func (x *ReminderConfig) GetMaxReminders() int64 {
 type EscalationConfig struct {
 	state                    protoimpl.MessageState `protogen:"open.v1"`
 	Enabled                  bool                   `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	DaysUntilFirstEscalation int64                  `protobuf:"varint,2,opt,name=daysUntilFirstEscalation,proto3" json:"daysUntilFirstEscalation,omitempty"`
+	DaysUntilFirstEscalation uint64                 `protobuf:"varint,2,opt,name=daysUntilFirstEscalation,proto3" json:"daysUntilFirstEscalation,omitempty"`
 	EscalationCronSchedule   string                 `protobuf:"bytes,3,opt,name=escalationCronSchedule,proto3" json:"escalationCronSchedule,omitempty"`
 	EscalationChain          []*ChainTier           `protobuf:"bytes,4,rep,name=escalationChain,proto3" json:"escalationChain,omitempty"`
 	unknownFields            protoimpl.UnknownFields
@@ -1368,7 +1432,7 @@ func (x *EscalationConfig) GetEnabled() bool {
 	return false
 }
 
-func (x *EscalationConfig) GetDaysUntilFirstEscalation() int64 {
+func (x *EscalationConfig) GetDaysUntilFirstEscalation() uint64 {
 	if x != nil {
 		return x.DaysUntilFirstEscalation
 	}
@@ -1392,11 +1456,10 @@ func (x *EscalationConfig) GetEscalationChain() []*ChainTier {
 type TimeoutConfig struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	Enabled          bool                   `protobuf:"varint,1,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	DaysUntilTimeout int64                  `protobuf:"varint,2,opt,name=daysUntilTimeout,proto3" json:"daysUntilTimeout,omitempty"`
-	// timeoutResult - does it need to be an enum?
-	TimeoutResult string `protobuf:"bytes,3,opt,name=timeoutResult,proto3" json:"timeoutResult,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	DaysUntilTimeout uint64                 `protobuf:"varint,2,opt,name=daysUntilTimeout,proto3" json:"daysUntilTimeout,omitempty"`
+	TimeoutResult    Status                 `protobuf:"varint,3,opt,name=timeoutResult,proto3,enum=approval.request.Status" json:"timeoutResult,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *TimeoutConfig) Reset() {
@@ -1436,18 +1499,18 @@ func (x *TimeoutConfig) GetEnabled() bool {
 	return false
 }
 
-func (x *TimeoutConfig) GetDaysUntilTimeout() int64 {
+func (x *TimeoutConfig) GetDaysUntilTimeout() uint64 {
 	if x != nil {
 		return x.DaysUntilTimeout
 	}
 	return 0
 }
 
-func (x *TimeoutConfig) GetTimeoutResult() string {
+func (x *TimeoutConfig) GetTimeoutResult() Status {
 	if x != nil {
 		return x.TimeoutResult
 	}
-	return ""
+	return Status_PENDING
 }
 
 type CronTimezone struct {
@@ -1505,9 +1568,9 @@ func (x *CronTimezone) GetOffset() string {
 type ChainTier struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ChainId       string                 `protobuf:"bytes,1,opt,name=chainId,proto3" json:"chainId,omitempty"`
-	Tier          int64                  `protobuf:"varint,2,opt,name=tier,proto3" json:"tier,omitempty"`
+	Tier          uint64                 `protobuf:"varint,2,opt,name=tier,proto3" json:"tier,omitempty"`
 	IdentityId    string                 `protobuf:"bytes,3,opt,name=identityId,proto3" json:"identityId,omitempty"`
-	IdentityType  string                 `protobuf:"bytes,4,opt,name=identityType,proto3" json:"identityType,omitempty"`
+	IdentityType  ChainIdentityType      `protobuf:"varint,4,opt,name=identityType,proto3,enum=approval.request.ChainIdentityType" json:"identityType,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1549,7 +1612,7 @@ func (x *ChainTier) GetChainId() string {
 	return ""
 }
 
-func (x *ChainTier) GetTier() int64 {
+func (x *ChainTier) GetTier() uint64 {
 	if x != nil {
 		return x.Tier
 	}
@@ -1563,11 +1626,11 @@ func (x *ChainTier) GetIdentityId() string {
 	return ""
 }
 
-func (x *ChainTier) GetIdentityType() string {
+func (x *ChainTier) GetIdentityType() ChainIdentityType {
 	if x != nil {
 		return x.IdentityType
 	}
-	return ""
+	return ChainIdentityType_IDENTITY
 }
 
 var File_approval_proto protoreflect.FileDescriptor
@@ -1667,9 +1730,9 @@ var file_approval_proto_rawDesc = string([]byte{
 	0x74, 0x2e, 0x41, 0x70, 0x70, 0x72, 0x6f, 0x76, 0x61, 0x6c, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
 	0x52, 0x0e, 0x61, 0x70, 0x70, 0x72, 0x6f, 0x76, 0x61, 0x6c, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
 	0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x65, 0x72, 0x69, 0x61, 0x6c, 0x53, 0x74, 0x65, 0x70, 0x18, 0x19,
-	0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x73, 0x65, 0x72, 0x69, 0x61, 0x6c, 0x53, 0x74, 0x65, 0x70,
+	0x20, 0x01, 0x28, 0x04, 0x52, 0x0a, 0x73, 0x65, 0x72, 0x69, 0x61, 0x6c, 0x53, 0x74, 0x65, 0x70,
 	0x12, 0x26, 0x0a, 0x0e, 0x65, 0x73, 0x63, 0x61, 0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x74,
-	0x65, 0x70, 0x18, 0x1a, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0e, 0x65, 0x73, 0x63, 0x61, 0x6c, 0x61,
+	0x65, 0x70, 0x18, 0x1a, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0e, 0x65, 0x73, 0x63, 0x61, 0x6c, 0x61,
 	0x74, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x65, 0x70, 0x1a, 0x47, 0x0a, 0x19, 0x41, 0x64, 0x64, 0x69,
 	0x74, 0x69, 0x6f, 0x6e, 0x61, 0x6c, 0x41, 0x74, 0x74, 0x72, 0x69, 0x62, 0x75, 0x74, 0x65, 0x73,
 	0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01,
@@ -1678,7 +1741,7 @@ var file_approval_proto_rawDesc = string([]byte{
 	0x01, 0x22, 0x46, 0x0a, 0x0c, 0x42, 0x61, 0x74, 0x63, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
 	0x74, 0x12, 0x18, 0x0a, 0x07, 0x62, 0x61, 0x74, 0x63, 0x68, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x07, 0x62, 0x61, 0x74, 0x63, 0x68, 0x49, 0x64, 0x12, 0x1c, 0x0a, 0x09, 0x62,
-	0x61, 0x74, 0x63, 0x68, 0x53, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09,
+	0x61, 0x74, 0x63, 0x68, 0x53, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09,
 	0x62, 0x61, 0x74, 0x63, 0x68, 0x53, 0x69, 0x7a, 0x65, 0x22, 0x51, 0x0a, 0x08, 0x49, 0x64, 0x65,
 	0x6e, 0x74, 0x69, 0x74, 0x79, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20,
@@ -1724,7 +1787,7 @@ var file_approval_proto_rawDesc = string([]byte{
 	0x54, 0x79, 0x70, 0x65, 0x52, 0x0f, 0x63, 0x61, 0x6c, 0x63, 0x75, 0x6c, 0x61, 0x74, 0x69, 0x6f,
 	0x6e, 0x54, 0x79, 0x70, 0x65, 0x12, 0x32, 0x0a, 0x14, 0x63, 0x61, 0x6c, 0x63, 0x75, 0x6c, 0x61,
 	0x74, 0x69, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x03, 0x52, 0x14, 0x63, 0x61, 0x6c, 0x63, 0x75, 0x6c, 0x61, 0x74, 0x69, 0x76, 0x61,
+	0x01, 0x28, 0x04, 0x52, 0x14, 0x63, 0x61, 0x6c, 0x63, 0x75, 0x6c, 0x61, 0x74, 0x69, 0x76, 0x61,
 	0x6c, 0x75, 0x65, 0x6f, 0x6e, 0x54, 0x79, 0x70, 0x65, 0x22, 0x77, 0x0a, 0x0f, 0x52, 0x65, 0x71,
 	0x75, 0x65, 0x73, 0x74, 0x65, 0x64, 0x54, 0x61, 0x72, 0x67, 0x65, 0x74, 0x12, 0x0e, 0x0a, 0x02,
 	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04,
@@ -1781,19 +1844,19 @@ var file_approval_proto_rawDesc = string([]byte{
 	0x0a, 0x07, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52,
 	0x07, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x12, 0x36, 0x0a, 0x16, 0x64, 0x61, 0x79, 0x73,
 	0x55, 0x6e, 0x74, 0x69, 0x6c, 0x46, 0x69, 0x72, 0x73, 0x74, 0x52, 0x65, 0x6d, 0x69, 0x6e, 0x64,
-	0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x16, 0x64, 0x61, 0x79, 0x73, 0x55, 0x6e,
+	0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x16, 0x64, 0x61, 0x79, 0x73, 0x55, 0x6e,
 	0x74, 0x69, 0x6c, 0x46, 0x69, 0x72, 0x73, 0x74, 0x52, 0x65, 0x6d, 0x69, 0x6e, 0x64, 0x65, 0x72,
 	0x12, 0x32, 0x0a, 0x14, 0x72, 0x65, 0x6d, 0x69, 0x6e, 0x64, 0x65, 0x72, 0x43, 0x72, 0x6f, 0x6e,
 	0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x14,
 	0x72, 0x65, 0x6d, 0x69, 0x6e, 0x64, 0x65, 0x72, 0x43, 0x72, 0x6f, 0x6e, 0x53, 0x63, 0x68, 0x65,
 	0x64, 0x75, 0x6c, 0x65, 0x12, 0x22, 0x0a, 0x0c, 0x4d, 0x61, 0x78, 0x52, 0x65, 0x6d, 0x69, 0x6e,
-	0x64, 0x65, 0x72, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0c, 0x4d, 0x61, 0x78, 0x52,
+	0x64, 0x65, 0x72, 0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0c, 0x4d, 0x61, 0x78, 0x52,
 	0x65, 0x6d, 0x69, 0x6e, 0x64, 0x65, 0x72, 0x73, 0x22, 0xe7, 0x01, 0x0a, 0x10, 0x45, 0x73, 0x63,
 	0x61, 0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x18, 0x0a,
 	0x07, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07,
 	0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x12, 0x3a, 0x0a, 0x18, 0x64, 0x61, 0x79, 0x73, 0x55,
 	0x6e, 0x74, 0x69, 0x6c, 0x46, 0x69, 0x72, 0x73, 0x74, 0x45, 0x73, 0x63, 0x61, 0x6c, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x18, 0x64, 0x61, 0x79, 0x73, 0x55,
+	0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x18, 0x64, 0x61, 0x79, 0x73, 0x55,
 	0x6e, 0x74, 0x69, 0x6c, 0x46, 0x69, 0x72, 0x73, 0x74, 0x45, 0x73, 0x63, 0x61, 0x6c, 0x61, 0x74,
 	0x69, 0x6f, 0x6e, 0x12, 0x36, 0x0a, 0x16, 0x65, 0x73, 0x63, 0x61, 0x6c, 0x61, 0x74, 0x69, 0x6f,
 	0x6e, 0x43, 0x72, 0x6f, 0x6e, 0x53, 0x63, 0x68, 0x65, 0x64, 0x75, 0x6c, 0x65, 0x18, 0x03, 0x20,
@@ -1803,31 +1866,36 @@ var file_approval_proto_rawDesc = string([]byte{
 	0x20, 0x03, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x61, 0x70, 0x70, 0x72, 0x6f, 0x76, 0x61, 0x6c, 0x2e,
 	0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x54, 0x69, 0x65,
 	0x72, 0x52, 0x0f, 0x65, 0x73, 0x63, 0x61, 0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x68, 0x61,
-	0x69, 0x6e, 0x22, 0x7b, 0x0a, 0x0d, 0x54, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x43, 0x6f, 0x6e,
-	0x66, 0x69, 0x67, 0x12, 0x18, 0x0a, 0x07, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x12, 0x2a, 0x0a,
-	0x10, 0x64, 0x61, 0x79, 0x73, 0x55, 0x6e, 0x74, 0x69, 0x6c, 0x54, 0x69, 0x6d, 0x65, 0x6f, 0x75,
-	0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x10, 0x64, 0x61, 0x79, 0x73, 0x55, 0x6e, 0x74,
-	0x69, 0x6c, 0x54, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x12, 0x24, 0x0a, 0x0d, 0x74, 0x69, 0x6d,
-	0x65, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0d, 0x74, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22,
-	0x42, 0x0a, 0x0c, 0x43, 0x72, 0x6f, 0x6e, 0x54, 0x69, 0x6d, 0x65, 0x7a, 0x6f, 0x6e, 0x65, 0x12,
-	0x1a, 0x0a, 0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x6f,
-	0x66, 0x66, 0x73, 0x65, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6f, 0x66, 0x66,
-	0x73, 0x65, 0x74, 0x22, 0x7d, 0x0a, 0x09, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x54, 0x69, 0x65, 0x72,
-	0x12, 0x18, 0x0a, 0x07, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x07, 0x63, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x69,
-	0x65, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x74, 0x69, 0x65, 0x72, 0x12, 0x1e,
-	0x0a, 0x0a, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x0a, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x49, 0x64, 0x12, 0x22,
-	0x0a, 0x0c, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x54, 0x79, 0x70, 0x65, 0x18, 0x04,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x54, 0x79,
-	0x70, 0x65, 0x2a, 0x3e, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x0b, 0x0a, 0x07,
-	0x50, 0x45, 0x4e, 0x44, 0x49, 0x4e, 0x47, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x41, 0x50, 0x50,
-	0x52, 0x4f, 0x56, 0x45, 0x44, 0x10, 0x01, 0x12, 0x0c, 0x0a, 0x08, 0x52, 0x45, 0x4a, 0x45, 0x43,
-	0x54, 0x45, 0x44, 0x10, 0x02, 0x12, 0x0b, 0x0a, 0x07, 0x45, 0x58, 0x50, 0x49, 0x52, 0x45, 0x44,
-	0x10, 0x03, 0x2a, 0x29, 0x0a, 0x08, 0x50, 0x72, 0x69, 0x6f, 0x72, 0x69, 0x74, 0x79, 0x12, 0x07,
+	0x69, 0x6e, 0x22, 0x95, 0x01, 0x0a, 0x0d, 0x54, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x43, 0x6f,
+	0x6e, 0x66, 0x69, 0x67, 0x12, 0x18, 0x0a, 0x07, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x65, 0x6e, 0x61, 0x62, 0x6c, 0x65, 0x64, 0x12, 0x2a,
+	0x0a, 0x10, 0x64, 0x61, 0x79, 0x73, 0x55, 0x6e, 0x74, 0x69, 0x6c, 0x54, 0x69, 0x6d, 0x65, 0x6f,
+	0x75, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x10, 0x64, 0x61, 0x79, 0x73, 0x55, 0x6e,
+	0x74, 0x69, 0x6c, 0x54, 0x69, 0x6d, 0x65, 0x6f, 0x75, 0x74, 0x12, 0x3e, 0x0a, 0x0d, 0x74, 0x69,
+	0x6d, 0x65, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x0e, 0x32, 0x18, 0x2e, 0x61, 0x70, 0x70, 0x72, 0x6f, 0x76, 0x61, 0x6c, 0x2e, 0x72, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x2e, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x0d, 0x74, 0x69, 0x6d,
+	0x65, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22, 0x42, 0x0a, 0x0c, 0x43, 0x72,
+	0x6f, 0x6e, 0x54, 0x69, 0x6d, 0x65, 0x7a, 0x6f, 0x6e, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x6c, 0x6f,
+	0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6c, 0x6f,
+	0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6f, 0x66, 0x66, 0x73, 0x65, 0x74, 0x22, 0xa2,
+	0x01, 0x0a, 0x09, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x54, 0x69, 0x65, 0x72, 0x12, 0x18, 0x0a, 0x07,
+	0x63, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63,
+	0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x69, 0x65, 0x72, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x04, 0x52, 0x04, 0x74, 0x69, 0x65, 0x72, 0x12, 0x1e, 0x0a, 0x0a, 0x69, 0x64,
+	0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
+	0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x49, 0x64, 0x12, 0x47, 0x0a, 0x0c, 0x69, 0x64,
+	0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x54, 0x79, 0x70, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0e,
+	0x32, 0x23, 0x2e, 0x61, 0x70, 0x70, 0x72, 0x6f, 0x76, 0x61, 0x6c, 0x2e, 0x72, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x2e, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74,
+	0x79, 0x54, 0x79, 0x70, 0x65, 0x52, 0x0c, 0x69, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79, 0x54,
+	0x79, 0x70, 0x65, 0x2a, 0x4d, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x0b, 0x0a,
+	0x07, 0x50, 0x45, 0x4e, 0x44, 0x49, 0x4e, 0x47, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x41, 0x50,
+	0x50, 0x52, 0x4f, 0x56, 0x45, 0x44, 0x10, 0x01, 0x12, 0x0c, 0x0a, 0x08, 0x52, 0x45, 0x4a, 0x45,
+	0x43, 0x54, 0x45, 0x44, 0x10, 0x02, 0x12, 0x0b, 0x0a, 0x07, 0x45, 0x58, 0x50, 0x49, 0x52, 0x45,
+	0x44, 0x10, 0x03, 0x12, 0x0d, 0x0a, 0x09, 0x43, 0x41, 0x4e, 0x43, 0x45, 0x4c, 0x4c, 0x45, 0x44,
+	0x10, 0x04, 0x2a, 0x29, 0x0a, 0x08, 0x50, 0x72, 0x69, 0x6f, 0x72, 0x69, 0x74, 0x79, 0x12, 0x07,
 	0x0a, 0x03, 0x4c, 0x4f, 0x57, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x4d, 0x45, 0x44, 0x49, 0x55,
 	0x4d, 0x10, 0x01, 0x12, 0x08, 0x0a, 0x04, 0x48, 0x49, 0x47, 0x48, 0x10, 0x02, 0x2a, 0x29, 0x0a,
 	0x06, 0x4d, 0x65, 0x64, 0x69, 0x75, 0x6d, 0x12, 0x09, 0x0a, 0x05, 0x45, 0x4d, 0x41, 0x49, 0x4c,
@@ -1853,11 +1921,21 @@ var file_approval_proto_rawDesc = string([]byte{
 	0x75, 0x69, 0x72, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12,
 	0x07, 0x0a, 0x03, 0x41, 0x4c, 0x4c, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x41, 0x50, 0x50, 0x52,
 	0x4f, 0x56, 0x41, 0x4c, 0x10, 0x01, 0x12, 0x0d, 0x0a, 0x09, 0x52, 0x45, 0x4a, 0x45, 0x43, 0x54,
-	0x49, 0x4f, 0x4e, 0x10, 0x02, 0x12, 0x07, 0x0a, 0x03, 0x4f, 0x46, 0x46, 0x10, 0x03, 0x42, 0x30,
-	0x5a, 0x2e, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x74, 0x72, 0x61,
-	0x76, 0x69, 0x73, 0x2d, 0x77, 0x69, 0x73, 0x63, 0x68, 0x2d, 0x73, 0x70, 0x2f, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x2d, 0x74, 0x65, 0x73, 0x74, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2d, 0x67, 0x6f,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x49, 0x4f, 0x4e, 0x10, 0x02, 0x12, 0x07, 0x0a, 0x03, 0x4f, 0x46, 0x46, 0x10, 0x03, 0x2a, 0x9a,
+	0x01, 0x0a, 0x11, 0x43, 0x68, 0x61, 0x69, 0x6e, 0x49, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x74, 0x79,
+	0x54, 0x79, 0x70, 0x65, 0x12, 0x0c, 0x0a, 0x08, 0x49, 0x44, 0x45, 0x4e, 0x54, 0x49, 0x54, 0x59,
+	0x10, 0x00, 0x12, 0x0e, 0x0a, 0x0a, 0x4d, 0x41, 0x4e, 0x41, 0x47, 0x45, 0x52, 0x5f, 0x4f, 0x46,
+	0x10, 0x01, 0x12, 0x14, 0x0a, 0x10, 0x47, 0x4f, 0x56, 0x45, 0x52, 0x4e, 0x41, 0x4e, 0x43, 0x45,
+	0x5f, 0x47, 0x52, 0x4f, 0x55, 0x50, 0x10, 0x02, 0x12, 0x10, 0x0a, 0x0c, 0x53, 0x4f, 0x55, 0x52,
+	0x43, 0x45, 0x5f, 0x4f, 0x57, 0x4e, 0x45, 0x52, 0x10, 0x03, 0x12, 0x0e, 0x0a, 0x0a, 0x52, 0x4f,
+	0x4c, 0x45, 0x5f, 0x4f, 0x57, 0x4e, 0x45, 0x52, 0x10, 0x04, 0x12, 0x18, 0x0a, 0x14, 0x41, 0x43,
+	0x43, 0x45, 0x53, 0x53, 0x5f, 0x50, 0x52, 0x4f, 0x46, 0x49, 0x4c, 0x45, 0x5f, 0x4f, 0x57, 0x4e,
+	0x45, 0x52, 0x10, 0x05, 0x12, 0x15, 0x0a, 0x11, 0x45, 0x4e, 0x54, 0x49, 0x54, 0x4c, 0x45, 0x4d,
+	0x45, 0x4e, 0x54, 0x5f, 0x4f, 0x57, 0x4e, 0x45, 0x52, 0x10, 0x06, 0x42, 0x30, 0x5a, 0x2e, 0x67,
+	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x74, 0x72, 0x61, 0x76, 0x69, 0x73,
+	0x2d, 0x77, 0x69, 0x73, 0x63, 0x68, 0x2d, 0x73, 0x70, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2d,
+	0x74, 0x65, 0x73, 0x74, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2d, 0x67, 0x6f, 0x62, 0x06, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x33,
 })
 
 var (
@@ -1872,7 +1950,7 @@ func file_approval_proto_rawDescGZIP() []byte {
 	return file_approval_proto_rawDescData
 }
 
-var file_approval_proto_enumTypes = make([]protoimpl.EnumInfo, 8)
+var file_approval_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
 var file_approval_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_approval_proto_goTypes = []any{
 	(Status)(0),                          // 0: approval.request.Status
@@ -1883,66 +1961,69 @@ var file_approval_proto_goTypes = []any{
 	(AutoApproveType)(0),                 // 5: approval.request.AutoApproveType
 	(ApprovalConfigScope)(0),             // 6: approval.request.ApprovalConfigScope
 	(RequireCommentType)(0),              // 7: approval.request.RequireCommentType
-	(*Approval)(nil),                     // 8: approval.request.Approval
-	(*BatchRequest)(nil),                 // 9: approval.request.BatchRequest
-	(*Identity)(nil),                     // 10: approval.request.Identity
-	(*LocaleField)(nil),                  // 11: approval.request.LocaleField
-	(*Comment)(nil),                      // 12: approval.request.Comment
-	(*ApprovalCriteria)(nil),             // 13: approval.request.ApprovalCriteria
-	(*ApprovalCriteriaCalculation)(nil),  // 14: approval.request.ApprovalCriteriaCalculation
-	(*RequestedTarget)(nil),              // 15: approval.request.RequestedTarget
-	(*Reference)(nil),                    // 16: approval.request.Reference
-	(*ApprovalConfig)(nil),               // 17: approval.request.ApprovalConfig
-	(*ReminderConfig)(nil),               // 18: approval.request.ReminderConfig
-	(*EscalationConfig)(nil),             // 19: approval.request.EscalationConfig
-	(*TimeoutConfig)(nil),                // 20: approval.request.TimeoutConfig
-	(*CronTimezone)(nil),                 // 21: approval.request.CronTimezone
-	(*ChainTier)(nil),                    // 22: approval.request.ChainTier
-	nil,                                  // 23: approval.request.Approval.AdditionalAttributesEntry
-	(*timestamppb.Timestamp)(nil),        // 24: google.protobuf.Timestamp
+	(ChainIdentityType)(0),               // 8: approval.request.ChainIdentityType
+	(*Approval)(nil),                     // 9: approval.request.Approval
+	(*BatchRequest)(nil),                 // 10: approval.request.BatchRequest
+	(*Identity)(nil),                     // 11: approval.request.Identity
+	(*LocaleField)(nil),                  // 12: approval.request.LocaleField
+	(*Comment)(nil),                      // 13: approval.request.Comment
+	(*ApprovalCriteria)(nil),             // 14: approval.request.ApprovalCriteria
+	(*ApprovalCriteriaCalculation)(nil),  // 15: approval.request.ApprovalCriteriaCalculation
+	(*RequestedTarget)(nil),              // 16: approval.request.RequestedTarget
+	(*Reference)(nil),                    // 17: approval.request.Reference
+	(*ApprovalConfig)(nil),               // 18: approval.request.ApprovalConfig
+	(*ReminderConfig)(nil),               // 19: approval.request.ReminderConfig
+	(*EscalationConfig)(nil),             // 20: approval.request.EscalationConfig
+	(*TimeoutConfig)(nil),                // 21: approval.request.TimeoutConfig
+	(*CronTimezone)(nil),                 // 22: approval.request.CronTimezone
+	(*ChainTier)(nil),                    // 23: approval.request.ChainTier
+	nil,                                  // 24: approval.request.Approval.AdditionalAttributesEntry
+	(*timestamppb.Timestamp)(nil),        // 25: google.protobuf.Timestamp
 }
 var file_approval_proto_depIdxs = []int32{
-	10, // 0: approval.request.Approval.approvers:type_name -> approval.request.Identity
-	24, // 1: approval.request.Approval.createdDate:type_name -> google.protobuf.Timestamp
-	9,  // 2: approval.request.Approval.batchRequest:type_name -> approval.request.BatchRequest
-	24, // 3: approval.request.Approval.dueDate:type_name -> google.protobuf.Timestamp
-	11, // 4: approval.request.Approval.name:type_name -> approval.request.LocaleField
-	11, // 5: approval.request.Approval.description:type_name -> approval.request.LocaleField
+	11, // 0: approval.request.Approval.approvers:type_name -> approval.request.Identity
+	25, // 1: approval.request.Approval.createdDate:type_name -> google.protobuf.Timestamp
+	10, // 2: approval.request.Approval.batchRequest:type_name -> approval.request.BatchRequest
+	25, // 3: approval.request.Approval.dueDate:type_name -> google.protobuf.Timestamp
+	12, // 4: approval.request.Approval.name:type_name -> approval.request.LocaleField
+	12, // 5: approval.request.Approval.description:type_name -> approval.request.LocaleField
 	1,  // 6: approval.request.Approval.priority:type_name -> approval.request.Priority
 	2,  // 7: approval.request.Approval.medium:type_name -> approval.request.Medium
-	10, // 8: approval.request.Approval.requester:type_name -> approval.request.Identity
-	10, // 9: approval.request.Approval.requestee:type_name -> approval.request.Identity
-	12, // 10: approval.request.Approval.comments:type_name -> approval.request.Comment
-	13, // 11: approval.request.Approval.approvalCriteria:type_name -> approval.request.ApprovalCriteria
-	10, // 12: approval.request.Approval.ApprovedBy:type_name -> approval.request.Identity
-	10, // 13: approval.request.Approval.RejectedBy:type_name -> approval.request.Identity
-	24, // 14: approval.request.Approval.completedDate:type_name -> google.protobuf.Timestamp
+	11, // 8: approval.request.Approval.requester:type_name -> approval.request.Identity
+	11, // 9: approval.request.Approval.requestee:type_name -> approval.request.Identity
+	13, // 10: approval.request.Approval.comments:type_name -> approval.request.Comment
+	14, // 11: approval.request.Approval.approvalCriteria:type_name -> approval.request.ApprovalCriteria
+	11, // 12: approval.request.Approval.ApprovedBy:type_name -> approval.request.Identity
+	11, // 13: approval.request.Approval.RejectedBy:type_name -> approval.request.Identity
+	25, // 14: approval.request.Approval.completedDate:type_name -> google.protobuf.Timestamp
 	0,  // 15: approval.request.Approval.status:type_name -> approval.request.Status
-	15, // 16: approval.request.Approval.requestedTarget:type_name -> approval.request.RequestedTarget
-	16, // 17: approval.request.Approval.referenceData:type_name -> approval.request.Reference
-	23, // 18: approval.request.Approval.additionalAttributes:type_name -> approval.request.Approval.AdditionalAttributesEntry
+	16, // 16: approval.request.Approval.requestedTarget:type_name -> approval.request.RequestedTarget
+	17, // 17: approval.request.Approval.referenceData:type_name -> approval.request.Reference
+	24, // 18: approval.request.Approval.additionalAttributes:type_name -> approval.request.Approval.AdditionalAttributesEntry
 	5,  // 19: approval.request.Approval.autoApprove:type_name -> approval.request.AutoApproveType
-	17, // 20: approval.request.Approval.approvalConfig:type_name -> approval.request.ApprovalConfig
-	10, // 21: approval.request.Comment.author:type_name -> approval.request.Identity
-	24, // 22: approval.request.Comment.createdDate:type_name -> google.protobuf.Timestamp
+	18, // 20: approval.request.Approval.approvalConfig:type_name -> approval.request.ApprovalConfig
+	11, // 21: approval.request.Comment.author:type_name -> approval.request.Identity
+	25, // 22: approval.request.Comment.createdDate:type_name -> google.protobuf.Timestamp
 	3,  // 23: approval.request.ApprovalCriteria.type:type_name -> approval.request.ApprovalCriteriaType
-	14, // 24: approval.request.ApprovalCriteria.rejection:type_name -> approval.request.ApprovalCriteriaCalculation
-	14, // 25: approval.request.ApprovalCriteria.approval:type_name -> approval.request.ApprovalCriteriaCalculation
+	15, // 24: approval.request.ApprovalCriteria.rejection:type_name -> approval.request.ApprovalCriteriaCalculation
+	15, // 25: approval.request.ApprovalCriteria.approval:type_name -> approval.request.ApprovalCriteriaCalculation
 	4,  // 26: approval.request.ApprovalCriteriaCalculation.calculationType:type_name -> approval.request.ApprovalCriteriaCalculationType
 	6,  // 27: approval.request.ApprovalConfig.scope:type_name -> approval.request.ApprovalConfigScope
-	18, // 28: approval.request.ApprovalConfig.reminderConfig:type_name -> approval.request.ReminderConfig
-	19, // 29: approval.request.ApprovalConfig.escalationConfig:type_name -> approval.request.EscalationConfig
-	20, // 30: approval.request.ApprovalConfig.timeoutConfig:type_name -> approval.request.TimeoutConfig
-	21, // 31: approval.request.ApprovalConfig.cronTimezone:type_name -> approval.request.CronTimezone
-	22, // 32: approval.request.ApprovalConfig.serialChain:type_name -> approval.request.ChainTier
+	19, // 28: approval.request.ApprovalConfig.reminderConfig:type_name -> approval.request.ReminderConfig
+	20, // 29: approval.request.ApprovalConfig.escalationConfig:type_name -> approval.request.EscalationConfig
+	21, // 30: approval.request.ApprovalConfig.timeoutConfig:type_name -> approval.request.TimeoutConfig
+	22, // 31: approval.request.ApprovalConfig.cronTimezone:type_name -> approval.request.CronTimezone
+	23, // 32: approval.request.ApprovalConfig.serialChain:type_name -> approval.request.ChainTier
 	7,  // 33: approval.request.ApprovalConfig.requireComment:type_name -> approval.request.RequireCommentType
-	10, // 34: approval.request.ApprovalConfig.fallbackAppover:type_name -> approval.request.Identity
-	22, // 35: approval.request.EscalationConfig.escalationChain:type_name -> approval.request.ChainTier
-	36, // [36:36] is the sub-list for method output_type
-	36, // [36:36] is the sub-list for method input_type
-	36, // [36:36] is the sub-list for extension type_name
-	36, // [36:36] is the sub-list for extension extendee
-	0,  // [0:36] is the sub-list for field type_name
+	11, // 34: approval.request.ApprovalConfig.fallbackAppover:type_name -> approval.request.Identity
+	23, // 35: approval.request.EscalationConfig.escalationChain:type_name -> approval.request.ChainTier
+	0,  // 36: approval.request.TimeoutConfig.timeoutResult:type_name -> approval.request.Status
+	8,  // 37: approval.request.ChainTier.identityType:type_name -> approval.request.ChainIdentityType
+	38, // [38:38] is the sub-list for method output_type
+	38, // [38:38] is the sub-list for method input_type
+	38, // [38:38] is the sub-list for extension type_name
+	38, // [38:38] is the sub-list for extension extendee
+	0,  // [0:38] is the sub-list for field type_name
 }
 
 func init() { file_approval_proto_init() }
@@ -1955,7 +2036,7 @@ func file_approval_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_approval_proto_rawDesc), len(file_approval_proto_rawDesc)),
-			NumEnums:      8,
+			NumEnums:      9,
 			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   0,
