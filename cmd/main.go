@@ -20,7 +20,7 @@ func main() {
 		SerialOrder: 1,
 	})
 
-	testApproval := &proto_go.Approval{
+	testApproval := &proto_go.ApprovalRequest{
 		Id:          uuid.NewString(),
 		TenantId:    uuid.NewString(),
 		Approvers:   testIdentities,
@@ -37,7 +37,7 @@ func main() {
 	fmt.Println("Encoded approval struct:")
 	fmt.Println(encodedApproval)
 
-	decodedApproval := &proto_go.Approval{}
+	decodedApproval := &proto_go.ApprovalRequest{}
 	if err := proto.Unmarshal(encodedApproval, decodedApproval); err != nil {
 		return
 	}

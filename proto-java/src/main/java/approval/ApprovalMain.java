@@ -19,12 +19,12 @@ public class ApprovalMain {
         List<approval.request.Approval.Identity> testIdentities = new ArrayList<>();
         testIdentities.add(approval.request.Approval.Identity.newBuilder()
                 .setType("IDENTITY")
-                .setId(UUID.randomUUID().toString())
+                .setIdentityId(UUID.randomUUID().toString())
                 .setSerialOrder(1)
                 .build());
         testIdentities.add(Identity.newBuilder()
                 .setType("GOVERNANCE_GROUP")
-                .setId(UUID.randomUUID().toString())
+                .setIdentityId(UUID.randomUUID().toString())
                 .setSerialOrder(2)
                 .build());
 

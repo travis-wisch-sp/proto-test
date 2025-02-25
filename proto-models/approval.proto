@@ -102,9 +102,12 @@ message BatchRequest {
 }
 
 message Identity {
-  string id = 1;
+  string identityId = 1;
   string type = 2;
-  uint64 serial_order = 3;
+  string name = 3;
+  repeated Reference ownerOf = 4;
+  repeated Reference members = 5;
+  uint64 serial_order = 6;
 }
 
 message LocaleField {
