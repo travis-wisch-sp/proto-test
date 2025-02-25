@@ -1,6 +1,9 @@
 package approval;
 
-import approval.request.ApprovalOuterClass;
+import approval.request.Approval;
+import approval.request.Approval.ApprovalRequest;
+import approval.request.Approval.Identity;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Timestamp;
 
@@ -13,13 +16,13 @@ import java.util.UUID;
 public class ApprovalMain {
 
     public static void main(String[] args) throws InvalidProtocolBufferException {
-        List<approval.request.ApprovalOuterClass.Identity> testIdentities = new ArrayList<>();
-        testIdentities.add(ApprovalOuterClass.Identity.newBuilder()
+        List<approval.request.Approval.Identity> testIdentities = new ArrayList<>();
+        testIdentities.add(approval.request.Approval.Identity.newBuilder()
                 .setType("IDENTITY")
                 .setId(UUID.randomUUID().toString())
                 .setSerialOrder(1)
                 .build());
-        testIdentities.add(ApprovalOuterClass.Identity.newBuilder()
+        testIdentities.add(Identity.newBuilder()
                 .setType("GOVERNANCE_GROUP")
                 .setId(UUID.randomUUID().toString())
                 .setSerialOrder(2)
@@ -27,10 +30,10 @@ public class ApprovalMain {
 
         OffsetDateTime currentTime = OffsetDateTime.now();
 
-        ApprovalOuterClass.Approval testApproval = ApprovalOuterClass.Approval.newBuilder()
+        ApprovalRequest testApproval = ApprovalRequest.newBuilder()
                 .setId(UUID.randomUUID().toString())
                 .setTenantId(UUID.randomUUID().toString())
-                .setStatus(ApprovalOuterClass.Status.PENDING)
+                .setStatus(Approval.Status.PENDING)
                 .addAllApprovers(testIdentities)
                 .setCreatedDate(Timestamp.newBuilder()
                         .setSeconds(currentTime.toInstant().getEpochSecond())
@@ -43,7 +46,7 @@ public class ApprovalMain {
         byte[] encodedApproval = testApproval.toByteArray();
         System.out.println("Encoded approval object: " + Arrays.toString(encodedApproval));
 
-        ApprovalOuterClass.Approval decodedApproval = ApprovalOuterClass.Approval.parseFrom(encodedApproval);
+        ApprovalRequest decodedApproval = ApprovalRequest.parseFrom(encodedApproval);
         System.out.println("\nDecoded approval object: " + decodedApproval);
     }
 }

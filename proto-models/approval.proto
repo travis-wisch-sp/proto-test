@@ -67,7 +67,7 @@ enum ChainIdentityType {
   ENTITLEMENT_OWNER = 6;
 }
 
-message Approval {
+message ApprovalRequest {
   string id = 1;
   string tenantId = 2;
   repeated Identity approvers = 3;
