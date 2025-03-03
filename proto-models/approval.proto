@@ -158,7 +158,7 @@ message ApprovalConfig {
   TimeoutConfig timeoutConfig = 6;
   CronTimezone cronTimezone = 7;
   repeated ChainTier serialChain = 8;
-  RequireCommentType requireComment = 9;
+  RequireCommentType requiresComment = 9;
   Identity fallbackAppover = 10;
 }
 
