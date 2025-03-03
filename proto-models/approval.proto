@@ -1,7 +1,6 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/struct.proto";
 
 
 // look into generic types in protobuf for "any"
@@ -91,7 +90,7 @@ message ApprovalRequest {
   Status status = 19;
   RequestedTarget requestedTarget = 20;
   repeated Reference referenceData = 21;
-  map<string, google.protobuf.Struct> additionalAttributes = 22;
+  map<string, string> additionalAttributes = 22;
   AutoApproveType autoApprove = 23;
   ApprovalConfig approvalConfig = 24;
   uint64 serialStep = 25;
