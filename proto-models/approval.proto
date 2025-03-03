@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
 
 // look into generic types in protobuf for "any"
 package approval.request;
@@ -89,7 +91,7 @@ message ApprovalRequest {
   Status status = 19;
   RequestedTarget requestedTarget = 20;
   repeated Reference referenceData = 21;
-  map<string, string> additionalAttributes = 22;
+  map<string, google.protobuf.Struct> additionalAttributes = 22;
   AutoApproveType autoApprove = 23;
   ApprovalConfig approvalConfig = 24;
   uint64 serialStep = 25;
@@ -130,7 +132,7 @@ message ApprovalCriteria {
 
 message ApprovalCriteriaCalculation {
   ApprovalCriteriaCalculationType calculationType = 1;
-  uint64 calculativalueonType = 2;
+  uint64 value = 2;
 }
 
 // what enums for types?

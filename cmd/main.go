@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	proto_go "github.com/travis-wisch-sp/proto-test/proto-go"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -15,9 +16,13 @@ func main() {
 
 	var testIdentities []*proto_go.Identity
 	testIdentities = append(testIdentities, &proto_go.Identity{
-		Id:          uuid.NewString(),
+		IdentityId:  uuid.NewString(),
 		Type:        "IDENTITY",
 		SerialOrder: 1,
+	})
+
+	attribute1, _ := structpb.NewStruct(map[string]any{
+		"blah2": 6,
 	})
 
 	testApproval := &proto_go.ApprovalRequest{
@@ -26,6 +31,9 @@ func main() {
 		Approvers:   testIdentities,
 		Status:      proto_go.Status_PENDING,
 		CreatedDate: timestamppb.New(time.Now()),
+		AdditionalAttributes: map[string]*structpb.Struct{
+			"blah": attribute1,
+		},
 	}
 	fmt.Println("Test approval struct:")
 	fmt.Println(testApproval)
