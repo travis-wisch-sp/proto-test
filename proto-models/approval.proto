@@ -166,7 +166,7 @@ message ReminderConfig {
   bool enabled = 1;
   uint64 daysUntilFirstReminder = 2;
   string reminderCronSchedule = 3;
-  uint64 MaxReminders = 4;
+  uint64 maxReminders = 4;
 }
 
 message EscalationConfig {
