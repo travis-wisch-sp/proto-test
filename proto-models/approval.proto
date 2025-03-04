@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
 
 
 // look into generic types in protobuf for "any"
@@ -68,6 +70,10 @@ enum ChainIdentityType {
   ENTITLEMENT_OWNER = 6;
 }
 
+message ApprovalRequestQuery {
+  repeated ApprovalRequest approvalRequests = 1;
+}
+
 message ApprovalRequest {
   string id = 1;
   string tenantId = 2;
@@ -90,7 +96,7 @@ message ApprovalRequest {
   Status status = 19;
   RequestedTarget requestedTarget = 20;
   repeated Reference referenceData = 21;
-  map<string, string> additionalAttributes = 22;
+  map<string, google.protobuf.Value> additionalAttributes = 22;
   AutoApproveType autoApprove = 23;
   ApprovalConfig approvalConfig = 24;
   uint64 serialStep = 25;
