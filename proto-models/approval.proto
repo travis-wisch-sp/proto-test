@@ -101,8 +101,6 @@ message ApprovalRequest {
   ApprovalConfig approvalConfig = 24;
   uint64 serialStep = 25;
   uint64 escalationStep = 26;
-  string coolField = 27;
-  string lameField = 28;
 }
 
 message BatchRequest {
